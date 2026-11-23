@@ -1,0 +1,43 @@
+@model List<Specialty>
+@{
+    ViewData["Title"] = "Головна";
+}
+
+<div class="p-5 mb-4 bg-white rounded-3 shadow-sm">
+    <h1 class="display-5 fw-bold">Лікарня: онлайн-запис до лікаря</h1>
+    <p class="fs-5 text-muted">Оберіть спеціальність, лікаря та зручний час. Записатися можна за кілька хвилин, а результати прийому й призначені ліки завжди будуть у вашому кабінеті.</p>
+
+    @if (User.Identity?.IsAuthenticated != true)
+    {
+        <a asp-controller="Account" asp-action="Register" class="btn btn-primary btn-lg me-2">Зареєструватися</a>
+        <a asp-controller="Account" asp-action="Login" class="btn btn-outline-primary btn-lg">Увійти</a>
+    }
+    else if (User.IsInRole("Patient"))
+    {
+        <a asp-controller="Patient" asp-action="ChooseSpecialty" class="btn btn-primary btn-lg me-2">Записатися до лікаря</a>
+        <a asp-controller="Patient" asp-action="MyAppointments" class="btn btn-outline-primary btn-lg">Мої записи</a>
+    }
+    else if (User.IsInRole("Doctor"))
+    {
+        <a asp-controller="Doctor" asp-action="Index" class="btn btn-primary btn-lg">Перейти до моїх прийомів</a>
+    }
+    else if (User.IsInRole("Admin"))
+    {
+        <a asp-controller="Admin" asp-action="Index" class="btn btn-primary btn-lg">Панель адміністратора</a>
+    }
+</div>
+
+<h3 class="mb-3">Наші спеціальності</h3>
+<div class="row">
+    @foreach (var s in Model)
+    {
+        <div class="col-sm-6 col-lg-4 mb-3">
+            <div class="card card-hover h-100">
+                <div class="card-body">
+                    <h5 class="card-title">@s.Name</h5>
+                    <p class="card-text text-muted">Лікарів: @s.Doctors.Count</p>
+                </div>
+            </div>
+        </div>
+    }
+</div>

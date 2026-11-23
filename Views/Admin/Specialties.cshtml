@@ -1,0 +1,38 @@
+@model List<Specialty>
+@{
+    ViewData["Title"] = "Спеціальності";
+}
+
+<h3 class="mb-3">Спеціальності</h3>
+
+<form asp-action="AddSpecialty" method="post" class="row g-2 mb-4">
+    <div class="col-md-5">
+        <input type="text" name="name" class="form-control" placeholder="Назва нової спеціальності" maxlength="50" required />
+    </div>
+    <div class="col-md-3">
+        <button type="submit" class="btn btn-success">Додати</button>
+    </div>
+</form>
+
+<div class="table-responsive">
+    <table class="table table-hover align-middle bg-white">
+        <thead class="table-light">
+            <tr><th>Назва</th><th>Лікарів</th><th></th></tr>
+        </thead>
+        <tbody>
+            @foreach (var s in Model)
+            {
+                <tr>
+                    <td>@s.Name</td>
+                    <td>@s.Doctors.Count</td>
+                    <td class="text-end">
+                        <form asp-action="DeleteSpecialty" asp-route-id="@s.Id" method="post" class="d-inline"
+                              onsubmit="return confirm('Видалити спеціальність «@s.Name»?');">
+                            <button type="submit" class="btn btn-sm btn-outline-danger">Видалити</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

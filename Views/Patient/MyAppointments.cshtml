@@ -1,0 +1,97 @@
+@model List<Appointment>
+@{
+    ViewData["Title"] = "Мої записи";
+    var upcoming = Model.Where(a => a.DateTime >= DateTime.Now).OrderBy(a => a.DateTime).ToList();
+    var past = Model.Where(a => a.DateTime < DateTime.Now).OrderByDescending(a => a.DateTime).ToList();
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h3 class="mb-0">Мої записи</h3>
+    <a asp-action="ChooseSpecialty" class="btn btn-primary">+ Новий запис</a>
+</div>
+
+<h5 class="mt-4">Майбутні записи</h5>
+@if (!upcoming.Any())
+{
+    <div class="alert alert-info">Майбутніх записів немає.</div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-hover align-middle bg-white">
+            <thead class="table-light">
+                <tr>
+                    <th>Дата і час</th>
+                    <th>Лікар</th>
+                    <th>Спеціальність</th>
+                    <th>Статус</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var a in upcoming)
+                {
+                    <tr>
+                        <td>@a.DateTime.ToString("dd.MM.yyyy HH:mm")</td>
+                        <td>@(a.Doctor?.User?.FullName)</td>
+                        <td>@(a.Doctor?.Specialty?.Name)</td>
+                        <td><span class="badge @a.Status.GetBadge()">@a.Status.GetName()</span></td>
+                        <td class="text-end">
+                            <a asp-action="Details" asp-route-id="@a.Id" class="btn btn-sm btn-outline-primary">Детальніше</a>
+                            @if (a.Status == AppointmentStatus.Pending || a.Status == AppointmentStatus.Confirmed)
+                            {
+                                <form asp-action="Cancel" asp-route-id="@a.Id" method="post" class="d-inline"
+                                      onsubmit="return confirm('Скасувати цей запис?');">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger">Скасувати</button>
+                                </form>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
+<h5 class="mt-4">Минулі записи</h5>
+@if (!past.Any())
+{
+    <div class="alert alert-info">Минулих записів немає.</div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-hover align-middle bg-white">
+            <thead class="table-light">
+                <tr>
+                    <th>Дата і час</th>
+                    <th>Лікар</th>
+                    <th>Спеціальність</th>
+                    <th>Статус</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var a in past)
+                {
+                    <tr>
+                        <td>@a.DateTime.ToString("dd.MM.yyyy HH:mm")</td>
+                        <td>@(a.Doctor?.User?.FullName)</td>
+                        <td>@(a.Doctor?.Specialty?.Name)</td>
+                        <td><span class="badge @a.Status.GetBadge()">@a.Status.GetName()</span></td>
+                        <td class="text-end">
+                            <a asp-action="Details" asp-route-id="@a.Id" class="btn btn-sm btn-outline-primary">Детальніше</a>
+                            @if (a.Status == AppointmentStatus.Pending || a.Status == AppointmentStatus.Confirmed)
+                            {
+                                <form asp-action="Cancel" asp-route-id="@a.Id" method="post" class="d-inline"
+                                      onsubmit="return confirm('Скасувати цей запис?');">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger">Скасувати</button>
+                                </form>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

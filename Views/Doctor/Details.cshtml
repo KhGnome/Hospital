@@ -1,0 +1,84 @@
+@model Appointment
+@{
+    ViewData["Title"] = "Запис пацієнта";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h3 class="mb-0">Запис на @Model.DateTime.ToString("dd.MM.yyyy HH:mm")</h3>
+    <span class="badge fs-6 @Model.Status.GetBadge()">@Model.Status.GetName()</span>
+</div>
+
+<div class="row">
+    <div class="col-lg-5 mb-3">
+        <div class="card h-100">
+            <div class="card-header">Дані пацієнта</div>
+            <div class="card-body">
+                <dl class="row mb-0">
+                    <dt class="col-sm-5">ПІБ</dt>
+                    <dd class="col-sm-7">@(Model.Patient?.FullName)</dd>
+                    <dt class="col-sm-5">Телефон</dt>
+                    <dd class="col-sm-7">@(Model.Patient?.PhoneNumber)</dd>
+                    <dt class="col-sm-5">Email</dt>
+                    <dd class="col-sm-7">@(Model.Patient?.Email)</dd>
+                    <dt class="col-sm-5">Дата народження</dt>
+                    <dd class="col-sm-7">@(Model.Patient?.BirthDate?.ToString("dd.MM.yyyy") ?? "не вказано")</dd>
+                </dl>
+                <a asp-action="PatientHistory" asp-route-patientId="@Model.PatientId" class="btn btn-outline-primary mt-3">Історія пацієнта</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-7 mb-3">
+        <div class="card h-100">
+            <div class="card-header">Скарга пацієнта</div>
+            <div class="card-body">
+                <p>@Model.Complaint</p>
+                <hr />
+                <dl class="row mb-0">
+                    <dt class="col-sm-4">Діагноз</dt>
+                    <dd class="col-sm-8">@(string.IsNullOrEmpty(Model.Diagnosis) ? "-" : Model.Diagnosis)</dd>
+                    <dt class="col-sm-4">Коментар лікаря</dt>
+                    <dd class="col-sm-8">@(string.IsNullOrEmpty(Model.DoctorComment) ? "-" : Model.DoctorComment)</dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (Model.Prescriptions.Any())
+{
+    <h5>Призначені ліки</h5>
+    <div class="table-responsive">
+        <table class="table bg-white">
+            <thead class="table-light">
+                <tr><th>Назва ліків</th><th>Дозування</th><th>Як приймати</th><th>Днів</th></tr>
+            </thead>
+            <tbody>
+                @foreach (var p in Model.Prescriptions)
+                {
+                    <tr><td>@p.MedicineName</td><td>@p.Dosage</td><td>@p.HowToTake</td><td>@p.Days</td></tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
+<div class="mt-3">
+    @if (Model.Status == AppointmentStatus.Pending)
+    {
+        <form asp-action="Confirm" asp-route-id="@Model.Id" method="post" class="d-inline">
+            <button type="submit" class="btn btn-success">Прийняти (підтвердити)</button>
+        </form>
+    }
+    @if (Model.Status == AppointmentStatus.Pending || Model.Status == AppointmentStatus.Confirmed)
+    {
+        <form asp-action="Reject" asp-route-id="@Model.Id" method="post" class="d-inline"
+              onsubmit="return confirm('Відхилити цей запис?');">
+            <button type="submit" class="btn btn-outline-danger">Відхилити</button>
+        </form>
+    }
+    @if (Model.Status == AppointmentStatus.Confirmed)
+    {
+        <a asp-action="Complete" asp-route-id="@Model.Id" class="btn btn-warning">Завершити прийом</a>
+    }
+    <a asp-action="Index" class="btn btn-outline-secondary">← До списку</a>
+</div>

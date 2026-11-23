@@ -1,0 +1,53 @@
+@model List<PatientSearchItem>
+@{
+    ViewData["Title"] = "Пошук пацієнта";
+}
+
+<h3 class="mb-3">Пошук пацієнта</h3>
+
+<form method="get" asp-action="Search" class="row g-2 mb-4">
+    <div class="col-md-6">
+        <input type="text" name="query" value="@ViewBag.Query" class="form-control" placeholder="Введіть ПІБ пацієнта" />
+    </div>
+    <div class="col-md-4">
+        <button type="submit" class="btn btn-primary">Шукати</button>
+        <a asp-action="Search" class="btn btn-outline-secondary">Скинути</a>
+    </div>
+</form>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">Пацієнтів не знайдено.</div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-hover align-middle bg-white">
+            <thead class="table-light">
+                <tr>
+                    <th>ПІБ</th>
+                    <th>Телефон</th>
+                    <th>Дата народження</th>
+                    <th>Записів</th>
+                    <th>Останній запис</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var p in Model)
+                {
+                    <tr>
+                        <td>@p.FullName</td>
+                        <td>@p.PhoneNumber</td>
+                        <td>@(p.BirthDate?.ToString("dd.MM.yyyy"))</td>
+                        <td>@p.VisitsCount</td>
+                        <td>@p.LastVisit.ToString("dd.MM.yyyy")</td>
+                        <td class="text-end">
+                            <a asp-action="PatientHistory" asp-route-patientId="@p.PatientId" class="btn btn-sm btn-outline-primary">Історія</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

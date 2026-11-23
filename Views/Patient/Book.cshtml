@@ -1,0 +1,62 @@
+@model BookingViewModel
+@{
+    ViewData["Title"] = "Запис до лікаря";
+    var minDate = DateTime.Today.ToString("yyyy-MM-dd");
+    var maxDate = DateTime.Today.AddDays(30).ToString("yyyy-MM-dd");
+}
+
+<h3 class="mb-1">Запис до лікаря</h3>
+<p class="text-muted">Крок 3 з 3: оберіть дату, час і опишіть скаргу</p>
+
+<div class="card mb-4">
+    <div class="card-body">
+        <h5 class="mb-1">@Model.DoctorName</h5>
+        <div class="text-muted">@Model.SpecialtyName, кабінет @Model.Office</div>
+    </div>
+</div>
+
+@* Форма вибору дати (GET): після зміни дати сторінка оновлюється і показує слоти *@
+<form method="get" asp-action="Book" class="row g-2 align-items-center mb-4">
+    <input type="hidden" name="doctorId" value="@Model.DoctorId" />
+    <div class="col-auto"><label class="col-form-label fw-bold">Дата прийому:</label></div>
+    <div class="col-auto">
+        <input type="date" name="date" class="form-control" value="@Model.Date.ToString("yyyy-MM-dd")"
+               min="@minDate" max="@maxDate" onchange="this.form.submit()" />
+    </div>
+    <div class="col-auto"><button type="submit" class="btn btn-outline-primary">Показати час</button></div>
+</form>
+
+@* Форма запису (POST) *@
+<form asp-action="Book" method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <input type="hidden" asp-for="DoctorId" />
+    <input type="hidden" name="Date" value="@Model.Date.ToString("yyyy-MM-dd")" />
+    <span asp-validation-for="Date" class="text-danger d-block mb-2"></span>
+
+    <h5>Вільний час на @Model.Date.ToString("dd.MM.yyyy")</h5>
+    <div class="slot-grid mb-2">
+        @foreach (var slot in Model.Slots)
+        {
+            var slotId = "slot_" + slot.Time.Replace(":", "");
+            <input type="radio" class="btn-check" name="Time" id="@slotId"
+                   value="@slot.Time" disabled="@slot.IsBusy" checked="@(Model.Time == slot.Time && !slot.IsBusy)" autocomplete="off" />
+            <label class="btn @(slot.IsBusy ? "btn-outline-secondary" : "btn-outline-success")"
+                   for="@slotId" title="@(slot.IsBusy ? "Зайнято" : "Вільно")">@slot.Time</label>
+        }
+    </div>
+    <span asp-validation-for="Time" class="text-danger d-block mb-3"></span>
+    <div class="form-text mb-3">Сірі кнопки - час зайнятий або вже минув.</div>
+
+    <div class="mb-3">
+        <label asp-for="Complaint" class="form-label"></label>
+        <textarea asp-for="Complaint" class="form-control" rows="4" placeholder="Опишіть, що вас турбує"></textarea>
+        <span asp-validation-for="Complaint" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Записатися</button>
+    <a asp-action="ChooseSpecialty" class="btn btn-outline-secondary">Скасувати</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

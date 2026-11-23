@@ -1,0 +1,35 @@
+@{
+    ViewData["Title"] = "Панель адміністратора";
+}
+
+<h3 class="mb-4">Панель адміністратора</h3>
+
+<div class="row mb-4">
+    <div class="col-6 col-md-3 mb-2">
+        <div class="card text-center"><div class="card-body">
+            <div class="display-6">@ViewBag.SpecialtiesCount</div><div class="text-muted">Спеціальностей</div>
+        </div></div>
+    </div>
+    <div class="col-6 col-md-3 mb-2">
+        <div class="card text-center"><div class="card-body">
+            <div class="display-6">@ViewBag.DoctorsCount</div><div class="text-muted">Лікарів</div>
+        </div></div>
+    </div>
+    <div class="col-6 col-md-3 mb-2">
+        <div class="card text-center"><div class="card-body">
+            <div class="display-6">@ViewBag.PatientsCount</div><div class="text-muted">Пацієнтів</div>
+        </div></div>
+    </div>
+    <div class="col-6 col-md-3 mb-2">
+        <div class="card text-center"><div class="card-body">
+            <div class="display-6">@ViewBag.AppointmentsCount</div><div class="text-muted">Записів</div>
+        </div></div>
+    </div>
+</div>
+
+<div class="d-flex flex-wrap gap-2">
+    <a asp-action="Specialties" class="btn btn-primary">Спеціальності</a>
+    <a asp-action="Doctors" class="btn btn-primary">Лікарі</a>
+    <a asp-action="CreateDoctor" class="btn btn-success">+ Додати лікаря</a>
+    <a asp-action="Appointments" class="btn btn-outline-primary">Усі записи</a>
+</div>

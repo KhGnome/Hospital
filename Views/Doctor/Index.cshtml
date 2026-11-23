@@ -1,0 +1,123 @@
+@model List<Appointment>
+@{
+    ViewData["Title"] = "Мої прийоми";
+    var statusFilter = (AppointmentStatus?)ViewData["Status"];
+    var dateFilter = (DateTime?)ViewData["Date"];
+}
+
+<h3 class="mb-3">Кабінет лікаря: @ViewBag.DoctorName</h3>
+
+@* Проста статистика *@
+<div class="row mb-4">
+    <div class="col-md-4 mb-2">
+        <div class="card text-center border-primary">
+            <div class="card-body">
+                <div class="display-6">@ViewBag.TodayCount</div>
+                <div class="text-muted">Прийомів сьогодні</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-2">
+        <div class="card text-center border-success">
+            <div class="card-body">
+                <div class="display-6">@ViewBag.WeekCount</div>
+                <div class="text-muted">Прийомів за тиждень</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-2">
+        <div class="card text-center border-info">
+            <div class="card-body">
+                <div class="display-6">@ViewBag.PatientsCount</div>
+                <div class="text-muted">Усього пацієнтів</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* Фільтри *@
+<form method="get" asp-action="Index" class="row g-2 align-items-end mb-3">
+    <div class="col-md-3">
+        <label class="form-label">Статус</label>
+        <select name="status" class="form-select">
+            <option value="">Усі статуси</option>
+            @foreach (AppointmentStatus s in Enum.GetValues(typeof(AppointmentStatus)))
+            {
+                <option value="@s" selected="@(statusFilter == s)">@s.GetName()</option>
+            }
+        </select>
+    </div>
+    <div class="col-md-3">
+        <label class="form-label">Дата</label>
+        <input type="date" name="date" class="form-control" value="@(dateFilter?.ToString("yyyy-MM-dd"))" />
+    </div>
+    <div class="col-md-4">
+        <button type="submit" class="btn btn-primary">Фільтрувати</button>
+        <a asp-action="Index" class="btn btn-outline-secondary">Скинути</a>
+    </div>
+</form>
+
+<h5>
+    @if (dateFilter.HasValue)
+    {
+        <text>Записи на @dateFilter.Value.ToString("dd.MM.yyyy")</text>
+    }
+    else
+    {
+        <text>Записи на сьогодні та найближчі дні</text>
+    }
+</h5>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">Записів не знайдено.</div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-hover align-middle bg-white">
+            <thead class="table-light">
+                <tr>
+                    <th>Дата і час</th>
+                    <th>Пацієнт</th>
+                    <th>Скарга</th>
+                    <th>Статус</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var a in Model)
+                {
+                    var shortComplaint = a.Complaint.Length > 60 ? a.Complaint.Substring(0, 60) + "..." : a.Complaint;
+                    <tr>
+                        <td>@a.DateTime.ToString("dd.MM.yyyy HH:mm")</td>
+                        <td>@(a.Patient?.FullName)</td>
+                        <td>@shortComplaint</td>
+                        <td><span class="badge @a.Status.GetBadge()">@a.Status.GetName()</span></td>
+                        <td class="text-end text-nowrap">
+                            <a asp-action="Details" asp-route-id="@a.Id" class="btn btn-sm btn-outline-primary">Детальніше</a>
+
+                            @if (a.Status == AppointmentStatus.Pending)
+                            {
+                                <form asp-action="Confirm" asp-route-id="@a.Id" method="post" class="d-inline">
+                                    <button type="submit" class="btn btn-sm btn-success">Прийняти</button>
+                                </form>
+                            }
+                            @if (a.Status == AppointmentStatus.Pending || a.Status == AppointmentStatus.Confirmed)
+                            {
+                                <form asp-action="Reject" asp-route-id="@a.Id" method="post" class="d-inline"
+                                      onsubmit="return confirm('Відхилити цей запис?');">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger">Відхилити</button>
+                                </form>
+                            }
+                            @if (a.Status == AppointmentStatus.Confirmed)
+                            {
+                                <a asp-action="Complete" asp-route-id="@a.Id" class="btn btn-sm btn-warning">Завершити прийом</a>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

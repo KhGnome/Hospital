@@ -1,0 +1,43 @@
+@model List<Prescription>
+@{
+    ViewData["Title"] = "Мої ліки";
+}
+
+<h3 class="mb-3">Мої ліки / рецепти</h3>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">Лікарі ще не призначали вам ліків.</div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-hover align-middle bg-white">
+            <thead class="table-light">
+                <tr>
+                    <th>Дата прийому</th>
+                    <th>Лікар</th>
+                    <th>Назва ліків</th>
+                    <th>Дозування</th>
+                    <th>Як приймати</th>
+                    <th>Днів</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var p in Model)
+                {
+                    <tr>
+                        <td>@(p.Appointment?.DateTime.ToString("dd.MM.yyyy"))</td>
+                        <td>@(p.Appointment?.Doctor?.User?.FullName)</td>
+                        <td><strong>@p.MedicineName</strong></td>
+                        <td>@p.Dosage</td>
+                        <td>@p.HowToTake</td>
+                        <td>@p.Days</td>
+                        <td><a asp-action="Details" asp-route-id="@p.AppointmentId" class="btn btn-sm btn-outline-primary">Прийом</a></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

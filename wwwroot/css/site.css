@@ -1,0 +1,42 @@
+body { background-color: #f5f7fa; }
+.slot-grid .btn { min-width: 80px; margin: 0 6px 8px 0; }
+.card-hover:hover { box-shadow: 0 0.5rem 1rem rgba(0,0,0,.12); transition: .2s; }
+.brand-icon {
+    height: 1rem;
+    width: auto;
+    margin-right: 0.5rem;
+}
+
+/* Darker blue for buttons */
+.btn-primary {
+    --bs-btn-bg: #0b4a8f;
+    --bs-btn-border-color: #0b4a8f;
+    --bs-btn-hover-bg: #083a73;
+    --bs-btn-hover-border-color: #072f5e;
+    --bs-btn-active-bg: #072f5e;
+    --bs-btn-active-border-color: #062750;
+    --bs-btn-disabled-bg: #0b4a8f;
+    --bs-btn-disabled-border-color: #0b4a8f;
+}
+.navbar.bg-primary {
+    background-color: #0b4a8f !important;
+}
+.page-content {
+    position: relative;
+    isolation: isolate; /* keeps the image layer behind the content */
+}
+
+    .page-content::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0; /* touches the footer */
+        height: min(100%, 650px); /* limit how tall the image area gets */
+        z-index: -1;
+        pointer-events: none;
+        background: url("../images/background.jpg") center bottom / cover no-repeat;
+        /* transparent at the top, fully visible at the bottom */
+        -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 100%);
+        mask-image: linear-gradient(to bottom, transparent 0%, #000 100%);
+    }

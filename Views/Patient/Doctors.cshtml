@@ -1,0 +1,31 @@
+@model List<DoctorProfile>
+@{
+    ViewData["Title"] = "Вибір лікаря";
+}
+
+<h3 class="mb-1">Спеціальність: @ViewBag.SpecialtyName</h3>
+<p class="text-muted">Крок 2 з 3: оберіть лікаря</p>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">Лікарів цієї спеціальності поки немає.</div>
+}
+
+<div class="row">
+    @foreach (var d in Model)
+    {
+        <div class="col-md-6 mb-3">
+            <div class="card card-hover h-100">
+                <div class="card-body">
+                    <h5 class="card-title">@d.User?.FullName</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">@d.Specialty?.Name</h6>
+                    <p class="mb-1">Кабінет: <strong>@d.Office</strong></p>
+                    <p class="mb-2">Стаж: <strong>@d.Experience</strong> р.</p>
+                    <p class="card-text">@d.Description</p>
+                    <a asp-action="Book" asp-route-doctorId="@d.Id" class="btn btn-primary">Обрати дату й час</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+<a asp-action="ChooseSpecialty" class="btn btn-outline-secondary">← Назад до спеціальностей</a>

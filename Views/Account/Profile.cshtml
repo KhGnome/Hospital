@@ -1,0 +1,43 @@
+@model ApplicationUser
+@{
+    ViewData["Title"] = "Мій кабінет";
+    var doctor = ViewBag.DoctorProfile as DoctorProfile;
+    string roleName = User.IsInRole("Admin") ? "Адміністратор" : User.IsInRole("Doctor") ? "Лікар" : "Пацієнт";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+        <div class="card shadow-sm">
+            <div class="card-body p-4">
+                <h3 class="mb-3">Мої дані</h3>
+                <dl class="row mb-0">
+                    <dt class="col-sm-5">Роль</dt>
+                    <dd class="col-sm-7">@roleName</dd>
+
+                    <dt class="col-sm-5">ПІБ</dt>
+                    <dd class="col-sm-7">@Model.FullName</dd>
+
+                    <dt class="col-sm-5">Email</dt>
+                    <dd class="col-sm-7">@Model.Email</dd>
+
+                    <dt class="col-sm-5">Телефон</dt>
+                    <dd class="col-sm-7">@Model.PhoneNumber</dd>
+
+                    <dt class="col-sm-5">Дата народження</dt>
+                    <dd class="col-sm-7">@(Model.BirthDate?.ToString("dd.MM.yyyy") ?? "не вказано")</dd>
+
+                    @if (doctor != null)
+                    {
+                        <dt class="col-sm-5">Спеціальність</dt>
+                        <dd class="col-sm-7">@doctor.Specialty?.Name</dd>
+                        <dt class="col-sm-5">Кабінет</dt>
+                        <dd class="col-sm-7">@doctor.Office</dd>
+                        <dt class="col-sm-5">Стаж</dt>
+                        <dd class="col-sm-7">@doctor.Experience р.</dd>
+                    }
+                </dl>
+                <a asp-action="EditProfile" class="btn btn-primary mt-3">Редагувати профіль</a>
+            </div>
+        </div>
+    </div>
+</div>

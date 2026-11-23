@@ -1,0 +1,47 @@
+@model List<Appointment>
+@{
+    ViewData["Title"] = "Історія пацієнта";
+    var patient = ViewBag.Patient as ApplicationUser;
+}
+
+<h3 class="mb-3">Історія пацієнта: @(patient?.FullName)</h3>
+
+<div class="card mb-4">
+    <div class="card-body">
+        <p class="mb-1"><strong>Телефон:</strong> @(patient?.PhoneNumber)</p>
+        <p class="mb-1"><strong>Email:</strong> @(patient?.Email)</p>
+        <p class="mb-0"><strong>Дата народження:</strong> @(patient?.BirthDate?.ToString("dd.MM.yyyy") ?? "не вказано")</p>
+    </div>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">Минулих прийомів немає.</div>
+}
+
+@foreach (var a in Model)
+{
+    <div class="card mb-3">
+        <div class="card-header d-flex justify-content-between">
+            <span>@a.DateTime.ToString("dd.MM.yyyy HH:mm")</span>
+            <span class="badge @a.Status.GetBadge()">@a.Status.GetName()</span>
+        </div>
+        <div class="card-body">
+            <p class="mb-1"><strong>Скарга:</strong> @a.Complaint</p>
+            <p class="mb-1"><strong>Діагноз:</strong> @(string.IsNullOrEmpty(a.Diagnosis) ? "-" : a.Diagnosis)</p>
+            <p class="mb-2"><strong>Коментар:</strong> @(string.IsNullOrEmpty(a.DoctorComment) ? "-" : a.DoctorComment)</p>
+            @if (a.Prescriptions.Any())
+            {
+                <strong>Призначення:</strong>
+                <ul class="mb-0">
+                    @foreach (var p in a.Prescriptions)
+                    {
+                        <li>@p.MedicineName, @p.Dosage - @p.HowToTake (@p.Days дн.)</li>
+                    }
+                </ul>
+            }
+        </div>
+    </div>
+}
+
+<a asp-action="Search" class="btn btn-outline-secondary">← До пошуку пацієнтів</a>

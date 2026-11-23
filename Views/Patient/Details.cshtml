@@ -1,0 +1,65 @@
+@model Appointment
+@{
+    ViewData["Title"] = "Прийом";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h3 class="mb-0">Прийом від @Model.DateTime.ToString("dd.MM.yyyy HH:mm")</h3>
+    <span class="badge fs-6 @Model.Status.GetBadge()">@Model.Status.GetName()</span>
+</div>
+
+<div class="card mb-4">
+    <div class="card-body">
+        <dl class="row mb-0">
+            <dt class="col-sm-3">Лікар</dt>
+            <dd class="col-sm-9">@(Model.Doctor?.User?.FullName)</dd>
+
+            <dt class="col-sm-3">Спеціальність</dt>
+            <dd class="col-sm-9">@(Model.Doctor?.Specialty?.Name)</dd>
+
+            <dt class="col-sm-3">Кабінет</dt>
+            <dd class="col-sm-9">@(Model.Doctor?.Office)</dd>
+
+            <dt class="col-sm-3">Моя скарга</dt>
+            <dd class="col-sm-9">@Model.Complaint</dd>
+
+            <dt class="col-sm-3">Діагноз</dt>
+            <dd class="col-sm-9">@(string.IsNullOrEmpty(Model.Diagnosis) ? "-" : Model.Diagnosis)</dd>
+
+            <dt class="col-sm-3">Коментар лікаря</dt>
+            <dd class="col-sm-9">@(string.IsNullOrEmpty(Model.DoctorComment) ? "-" : Model.DoctorComment)</dd>
+
+            <dt class="col-sm-3">Запис створено</dt>
+            <dd class="col-sm-9">@Model.DateCreated.ToString("dd.MM.yyyy HH:mm")</dd>
+        </dl>
+    </div>
+</div>
+
+<h5>Призначені ліки</h5>
+@if (!Model.Prescriptions.Any())
+{
+    <div class="alert alert-info">Ліки не призначено.</div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table bg-white">
+            <thead class="table-light">
+                <tr><th>Назва ліків</th><th>Дозування</th><th>Як приймати</th><th>Днів</th></tr>
+            </thead>
+            <tbody>
+                @foreach (var p in Model.Prescriptions)
+                {
+                    <tr>
+                        <td>@p.MedicineName</td>
+                        <td>@p.Dosage</td>
+                        <td>@p.HowToTake</td>
+                        <td>@p.Days</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
+<a asp-action="MyAppointments" class="btn btn-outline-secondary">← До моїх записів</a>

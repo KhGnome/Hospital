@@ -1,0 +1,86 @@
+@model CompleteViewModel
+@{
+    ViewData["Title"] = "Завершення прийому";
+}
+
+<h3 class="mb-3">Завершення прийому</h3>
+
+<div class="card mb-4">
+    <div class="card-body">
+        <p class="mb-1"><strong>Пацієнт:</strong> @Model.PatientName</p>
+        <p class="mb-1"><strong>Дата і час:</strong> @Model.AppointmentDate.ToString("dd.MM.yyyy HH:mm")</p>
+        <p class="mb-0"><strong>Скарга:</strong> @Model.Complaint</p>
+    </div>
+</div>
+
+<form asp-action="Complete" method="post" id="completeForm">
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <input type="hidden" asp-for="AppointmentId" />
+
+    <div class="mb-3">
+        <label asp-for="Diagnosis" class="form-label"></label>
+        <input asp-for="Diagnosis" class="form-control" />
+        <span asp-validation-for="Diagnosis" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="DoctorComment" class="form-label"></label>
+        <textarea asp-for="DoctorComment" class="form-control" rows="4"></textarea>
+        <span asp-validation-for="DoctorComment" class="text-danger"></span>
+    </div>
+
+    <h5>Призначення (ліки)</h5>
+    <p class="text-muted">Додайте один або кілька препаратів. Порожні рядки буде пропущено.</p>
+
+    <div id="rows"></div>
+    <button type="button" class="btn btn-outline-primary mb-4" id="addRowBtn">+ Додати ліки</button>
+
+    <div>
+        <button type="submit" class="btn btn-success">Завершити прийом</button>
+        <a asp-action="Details" asp-route-id="@Model.AppointmentId" class="btn btn-outline-secondary">Скасувати</a>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        // Рядки призначень, які вже були введені (якщо форма повернулась з помилкою)
+        var initial = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.Prescriptions));
+        var container = document.getElementById('rows');
+
+        // Додає один рядок для ліків
+        function addRow(item) {
+            item = item || {};
+            var div = document.createElement('div');
+            div.className = 'row g-2 mb-2 prescription-row';
+            div.innerHTML =
+                '<div class="col-md-3"><input class="form-control" data-field="MedicineName" placeholder="Назва ліків" maxlength="100" /></div>' +
+                '<div class="col-md-2"><input class="form-control" data-field="Dosage" placeholder="Дозування" maxlength="100" /></div>' +
+                '<div class="col-md-4"><input class="form-control" data-field="HowToTake" placeholder="Як приймати" maxlength="200" /></div>' +
+                '<div class="col-md-2"><input class="form-control" type="number" min="1" max="365" data-field="Days" placeholder="Днів" /></div>' +
+                '<div class="col-md-1"><button type="button" class="btn btn-outline-danger w-100 remove-btn" title="Видалити">&times;</button></div>';
+
+            var inputs = div.querySelectorAll('[data-field]');
+            inputs.forEach(function (inp) {
+                var value = item[inp.dataset.field];
+                inp.value = (value === null || value === undefined) ? '' : value;
+            });
+            div.querySelector('.remove-btn').addEventListener('click', function () { div.remove(); });
+            container.appendChild(div);
+        }
+
+        initial.forEach(function (item) { addRow(item); });
+        if (initial.length === 0) { addRow(); }
+
+        document.getElementById('addRowBtn').addEventListener('click', function () { addRow(); });
+
+        // Перед відправкою нумеруємо поля: Prescriptions[0].MedicineName, Prescriptions[1]...
+        document.getElementById('completeForm').addEventListener('submit', function () {
+            var rows = container.querySelectorAll('.prescription-row');
+            rows.forEach(function (row, i) {
+                row.querySelectorAll('[data-field]').forEach(function (inp) {
+                    inp.name = 'Prescriptions[' + i + '].' + inp.dataset.field;
+                });
+            });
+        });
+    </script>
+}
