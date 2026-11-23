@@ -1,6 +1,6 @@
 # Лікарня: онлайн-запис до лікаря
 
-Навчальний проєкт: ASP.NET Core MVC (.NET 8), Entity Framework Core, SQLite, ASP.NET Core Identity, Bootstrap 5.
+Навчальний проєкт: ASP.NET Core MVC (.NET 8), Entity Framework Core, SQLServer, ASP.NET Core Identity, Bootstrap 5.
 
 ## Запуск
 

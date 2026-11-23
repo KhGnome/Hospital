@@ -40,7 +40,7 @@
             var slotId = "slot_" + slot.Time.Replace(":", "");
             <input type="radio" class="btn-check" name="Time" id="@slotId"
                    value="@slot.Time" disabled="@slot.IsBusy" checked="@(Model.Time == slot.Time && !slot.IsBusy)" autocomplete="off" />
-            <label class="btn @(slot.IsBusy ? "btn-outline-secondary" : "btn-outline-success")"
+            <label class="btn @(slot.IsBusy ? "btn-secondary" : "btn-primary")"
                    for="@slotId" title="@(slot.IsBusy ? "Зайнято" : "Вільно")">@slot.Time</label>
         }
     </div>

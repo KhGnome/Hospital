@@ -7,9 +7,9 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// 1. База даних SQLite
+// 1. База даних SQL Server (LocalDB)
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // 2. Identity (користувачі й ролі) з простими правилами пароля
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
@@ -86,6 +86,7 @@ app.MapControllerRoute(
 using (var scope = app.Services.CreateScope())
 {
     await DbInitializer.SeedAsync(scope.ServiceProvider);
+    await ExtraSeed.AddMoreAsync(scope.ServiceProvider); // додаткові лікарі й пацієнти
 }
 
 app.Run();
