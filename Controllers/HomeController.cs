@@ -23,6 +23,15 @@ namespace Hospital.Controllers
             return View(specialties);
         }
 
+        // Сторінка «Про нас»: цифри беремо з бази
+        public async Task<IActionResult> About()
+        {
+            ViewBag.DoctorsCount = await _context.DoctorProfiles.CountAsync();
+            ViewBag.SpecialtiesCount = await _context.Specialties.CountAsync();
+            ViewBag.AppointmentsCount = await _context.Appointments.CountAsync();
+            return View();
+        }
+
         // Сторінка помилок (404, 500 тощо)
         public IActionResult Error(int? code)
         {

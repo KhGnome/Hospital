@@ -1,0 +1,144 @@
+@{
+    ViewData["Title"] = "Про нас";
+}
+
+@section Hero {
+    <section class="hero hero--small">
+        <div class="container hero__inner">
+            <h1>Про нас</h1>
+            <p class="hero__lead">Сервіс онлайн-запису до лікаря: просто, зрозуміло і без черг.</p>
+        </div>
+    </section>
+}
+
+<section class="section">
+    <div class="row g-4 align-items-center">
+        <div class="col-lg-7 reveal">
+            <h2 class="section__title">Хто ми</h2>
+            <p>
+                «Лікарня» поєднує пацієнтів і лікарів в одному місці. Пацієнт обирає спеціальність,
+                лікаря та вільний час, а лікар бачить свій розклад, підтверджує записи й веде історію прийомів.
+            </p>
+            <p>
+                Ми прагнемо, щоб звернення за допомогою було спокійним і передбачуваним: без дзвінків
+                і очікування в черзі, зі зрозумілим статусом кожного запису.
+            </p>
+            <ul class="checklist">
+                <li>Запис до лікаря за кілька хвилин, у будь-який час</li>
+                <li>Вільні слоти по 30 хвилин видно одразу</li>
+                <li>Діагнози, коментарі лікаря та призначені ліки зберігаються у вашому кабінеті</li>
+            </ul>
+        </div>
+        <div class="col-lg-5">
+            <div class="row g-3">
+                <div class="col-4 reveal" style="--i:0">
+                    <div class="stat"><span class="stat__num" data-count="@ViewBag.DoctorsCount">@ViewBag.DoctorsCount</span><span class="stat__label">лікарів</span></div>
+                </div>
+                <div class="col-4 reveal" style="--i:1">
+                    <div class="stat"><span class="stat__num" data-count="@ViewBag.SpecialtiesCount">@ViewBag.SpecialtiesCount</span><span class="stat__label">спеціальностей</span></div>
+                </div>
+                <div class="col-4 reveal" style="--i:2">
+                    <div class="stat"><span class="stat__num" data-count="@ViewBag.AppointmentsCount">@ViewBag.AppointmentsCount</span><span class="stat__label">записів</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <h2 class="section__title reveal">Наші принципи</h2>
+    <p class="section__sub reveal" style="--i:1">На чому побудований сервіс.</p>
+    <div class="info-grid">
+        <div class="info-card reveal" style="--i:0">
+            <div class="info-card__icon"><i class="bi bi-calendar-check"></i></div>
+            <h5>Зручність</h5>
+            <p>Обирайте дату й час самі. Запис можна скасувати, а слот одразу звільниться для інших.</p>
+        </div>
+        <div class="info-card reveal" style="--i:1">
+            <div class="info-card__icon"><i class="bi bi-shield-check"></i></div>
+            <h5>Конфіденційність</h5>
+            <p>Пацієнт бачить лише свої записи, а лікар лише свої прийоми. Чужі дані недоступні.</p>
+        </div>
+        <div class="info-card reveal" style="--i:2">
+            <div class="info-card__icon"><i class="bi bi-journal-medical"></i></div>
+            <h5>Прозорість</h5>
+            <p>Статус запису від «Очікує» до «Завершено», діагноз і призначення завжди під рукою.</p>
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <h2 class="section__title reveal">Для пацієнтів і лікарів</h2>
+    <div class="row g-4 mt-1">
+        <div class="col-md-6 reveal" style="--i:0">
+            <div class="info-card">
+                <div class="info-card__icon"><i class="bi bi-people"></i></div>
+                <h5>Пацієнтам</h5>
+                <ul class="checklist mt-2">
+                    <li>Реєстрація за хвилину</li>
+                    <li>Запис до лікаря потрібної спеціальності</li>
+                    <li>Історія записів і список призначених ліків</li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-md-6 reveal" style="--i:1">
+            <div class="info-card">
+                <div class="info-card__icon"><i class="bi bi-clipboard2-pulse"></i></div>
+                <h5>Лікарям</h5>
+                <ul class="checklist mt-2">
+                    <li>Розклад прийомів на день і тиждень</li>
+                    <li>Підтвердження записів і завершення прийому з діагнозом</li>
+                    <li>Пошук пацієнта та історія його візитів</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section" id="contacts">
+    <h2 class="section__title reveal">Контакти</h2>
+    <p class="section__sub reveal" style="--i:1">Дані нижче є прикладом для навчального проєкту.</p>
+    <div class="row g-3">
+        <div class="col-sm-6 col-lg-3 reveal" style="--i:0">
+            <div class="contact-card">
+                <i class="bi bi-geo-alt-fill"></i>
+                <div><small>Адреса</small>м. Київ, вул. Здоров'я, 1</div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-lg-3 reveal" style="--i:1">
+            <div class="contact-card">
+                <i class="bi bi-telephone-fill"></i>
+                <div><small>Телефон</small><a href="tel:+380441234567">+380 44 123 45 67</a></div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-lg-3 reveal" style="--i:2">
+            <div class="contact-card">
+                <i class="bi bi-envelope-fill"></i>
+                <div><small>Електронна пошта</small><a href="mailto:info@@hospital.ua">info@@hospital.ua</a></div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-lg-3 reveal" style="--i:3">
+            <div class="contact-card">
+                <i class="bi bi-clock-fill"></i>
+                <div><small>Години прийому</small>Щодня 9:00 – 17:00</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="cta-band reveal d-flex flex-wrap align-items-center justify-content-between gap-3">
+        <div>
+            <h4 class="mb-1">Готові записатися?</h4>
+            <div>Оберіть лікаря та вільний час просто зараз.</div>
+        </div>
+        @if (User.IsInRole("Doctor") || User.IsInRole("Admin"))
+        {
+            <a class="hero-btn" asp-controller="Home" asp-action="Index" asp-fragment="specialties">Наші спеціальності</a>
+        }
+        else
+        {
+            <a class="hero-btn" asp-controller="Patient" asp-action="ChooseSpecialty">Записатися онлайн</a>
+        }
+    </div>
+</section>
